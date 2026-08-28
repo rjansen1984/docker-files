@@ -7,27 +7,17 @@
   },
   "packageRules": [
     {
-      "description": "Allow only patch and minor updates in Compose files",
+      "description": "Use Docker tag versioning for all Compose images",
       "matchManagers": ["docker-compose"],
+      "matchDatasources": ["docker"],
+      "versioning": "docker"
+    },
+    {
+      "description": "Ignore major Docker image updates",
+      "matchManagers": ["docker-compose"],
+      "matchDatasources": ["docker"],
       "matchUpdateTypes": ["major"],
       "enabled": false
-    },
-    {
-      "description": "Automatically merge patch and minor Compose updates",
-      "matchManagers": ["docker-compose"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true,
-      "automergeType": "pr"
-    },
-    {
-      "description": "Read LinuxServer images correctly and ignore strange tags",
-      "matchPackagePatterns": ["^lscr\\.io/linuxserver/", "^ghcr\\.io/linuxserver/"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(-(?<compatibility>.*))?$"
-    },
-    {
-      "description": "Keep MariaDB within 11.x",
-      "matchPackageNames": ["mariadb"],
-      "allowedVersions": "/^11\\./"
     }
   ]
 }
