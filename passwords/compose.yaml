@@ -1,0 +1,27 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.37.2
+    container_name: vaultwarden
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - /${APP_VOLUME_DIR}/vaultwarden/:/data
+    ports:
+      - 5555:80
+      - 3012:3012
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

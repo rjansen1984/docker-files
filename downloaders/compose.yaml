@@ -1,0 +1,71 @@
+services:
+  nzbget:
+    image: ghcr.io/linuxserver/nzbget:version-v26.3
+    container_name: nzbget
+    cpu_shares: 512
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6789/jsonrpc"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:nzbget
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/nzbget:/config
+      - /${DOWNLOAD_VOLUME_DIR}:/downloads
+    ports:
+      - 6789:6789
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    networks:
+      - docker-network
+
+  transmission:
+    image: ghcr.io/linuxserver/transmission:4.1.3
+    container_name: transmission
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/transmission/web"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:transmission
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/transmission/data:/config:rw
+      - /${APP_VOLUME_DIR}/transmission/watch:/watch:rw
+      - /${DOWNLOAD_VOLUME_DIR}:/downloads:rw
+    ports:
+      - 9091:9091
+      - 51413:51413/udp
+      - 51413:51413
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

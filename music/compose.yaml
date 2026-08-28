@@ -1,0 +1,55 @@
+services:
+  picard:
+    image: mikenye/picard
+    container_name: picard
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5800/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    environment:
+      - GROUP_ID=${PGID}
+      - USER_ID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/picard:/config:rw
+      - /${MUSIC_VOLUME_DIR}:/storage:rw
+    ports:
+      - 5800:5800
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+  roon:
+    image: ghcr.io/roonlabs/roonserver:1.0.8
+    container_name: roon
+    cpu_shares: 1024
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f RoonServer || exit 0"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
+    environment:
+      - ROON_INSTALL_BRANCH=${ROON_INSTALL_BRANCH}
+      - TZ=${TZ}
+    volumes:
+      - /${MUSIC_VOLUME_DIR}:/Music:ro
+      - /${APP_VOLUME_DIR}/roon:/Roon
+      - /${BACKUP_VOLUME_DIR}/RoonBackups:/RoonBackups
+    deploy:
+      resources:
+        limits:
+          memory: 2048m
+    network_mode: host
+
+networks:
+  docker-network:
+    external: true

@@ -1,0 +1,99 @@
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:0.6.27
+    container_name: calibre-web
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:calibre-web
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/calibre-web/data:/config
+      - /${BOOK_VOLUME_DIR}/Calibre:/books
+    ports:
+      - 8083:8083
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+  grimmory:
+    image: ghcr.io/grimmory-tools/grimmory:v3.3.3
+    container_name: grimmory
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 6069 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+    depends_on:
+      grimmory-db:
+        condition: service_started
+    environment:
+      - GROUP_ID=${PGID}
+      - USER_ID=${PUID}
+      - BOOKLORE_PORT=${GRIMMORY_PORT}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/grimmory/data:/app/data:rw
+      - /${BOOK_VOLUME_DIR}/BookDrop:/bookdrop:rw
+      - /${BOOK_VOLUME_DIR}/Library:/books:rw
+    ports:
+      - 6069:6069
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    networks:
+      - docker-network
+
+  grimmory-db:
+    image: mariadb:11.8-noble
+    container_name: grimmory-db
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:false
+    environment:
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_HOST=${MARIADB_HOST}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/grimmory/db:/var/lib/mysql:rw
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

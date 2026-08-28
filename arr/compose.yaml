@@ -1,0 +1,180 @@
+services:
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
+    container_name: flaresolverr
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8191/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    environment:
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER}
+      - LOG_HTML=${LOG_HTML}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - TZ=${TZ}
+    ports:
+      - 8191:8191
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - docker-network
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:3.1.0
+    container_name: lidarr
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8686/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:lidarr
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/lidarr:/config
+      - /${DOWNLOAD_VOLUME_DIR}:/downloads
+      - /${MUSIC_VOLUME_DIR}:/music
+    ports:
+      - 8686:8686
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:2.5.2
+    container_name: prowlarr
+    cpu_shares: 256
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9696/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:prowlarr
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/prowlarr:/config
+    ports:
+      - 9696:9696
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - docker-network
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:6.3.0
+    container_name: radarr
+    cpu_shares: 512
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7878/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:radarr
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/radarr:/config
+      - /${DOWNLOAD_VOLUME_DIR}:/downloads
+      - /${MEDIA_VOLUME_DIR}:/share
+    ports:
+      - 7878:7878
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+  seerr:
+    image: ghcr.io/seerr-team/seerr:v3.4.1
+    container_name: seerr
+    cpu_shares: 512
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5055/api/v1/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/seerr:/app/config
+      - /${MEDIA_VOLUME_DIR}:/share
+    ports:
+      - 5055:5055
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:4.0.19
+    container_name: sonarr
+    cpu_shares: 512
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8989/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:sonarr
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/sonarr:/config
+      - /${DOWNLOAD_VOLUME_DIR}:/downloads
+      - /${MEDIA_VOLUME_DIR}:/share
+    ports:
+      - 8989:8989
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

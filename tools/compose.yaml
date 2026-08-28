@@ -1,0 +1,30 @@
+services:
+  themepark:
+    image: ghcr.io/themepark-dev/theme.park:1.22.1
+    container_name: themepark
+    cpu_shares: 128
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/themes.json"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/themepark:/config
+    ports:
+      - 8080:80
+      - 4443:443
+    deploy:
+      resources:
+        limits:
+          memory: 48M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true

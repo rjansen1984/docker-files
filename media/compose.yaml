@@ -1,0 +1,37 @@
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex:1.43.3
+    container_name: plex
+    cpu_shares: 1024
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:32400/identity"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - DOCKER_MODS=${THEME_PARK_MODS}:plex
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - PLEX_CLAIM=${PLEX_CLAIM}
+      - TP_COMMUNITY_THEME=${TP_COMMUNITY_THEME}
+      - TP_DOMAIN=${TP_DOMAIN}
+      - TP_THEME=${TP_THEME}
+      - TZ=${TZ}
+      - VERSION=${VERSION}
+    volumes:
+      - /${APP_VOLUME_DIR}/plex:/config:rw
+      - /${MOVIES_VOLUME_DIR}:/mnt/movies:ro
+      - /${MUSIC_VOLUME_DIR}:/mnt/music:ro
+      - /${SERIES_VOLUME_DIR}:/mnt/series:ro
+    devices:
+      - /dev/dri/card0:/dev/dri/card0
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    network_mode: host

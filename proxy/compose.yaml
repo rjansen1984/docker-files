@@ -1,0 +1,31 @@
+services:
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:2.15.1
+    container_name: nginx-proxy-manager
+    cpu_shares: 512
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/usr/bin/check-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - /${APP_VOLUME_DIR}/npm/data:/data
+      - /${APP_VOLUME_DIR}/npm/letsencrypt:/etc/letsencrypt
+    ports:
+      - 8088:80    # Public HTTP Port
+      - 8111:81    # Admin Web GUI Port
+      - 4433:443    # Public HTTPS Port
+    dns:
+      - 1.1.1.1    # Cloudflare DNS
+      - 8.8.8.8    # Google DNS
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    external: true
