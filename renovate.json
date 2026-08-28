@@ -1,0 +1,13 @@
+{
+  "$schema": "https://renovatebot.com",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["docker-compose"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}
