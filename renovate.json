@@ -1,24 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    "docker:disableMajor"
+  ],
   "dependencyDashboard": true,
   "enabledManagers": ["docker-compose"],
   "docker-compose": {
-    "fileMatch": ["(^|/)(docker-)?compose\\.ya?ml$"]
-  },
-  "packageRules": [
-    {
-      "description": "Use Docker tag versioning for all Compose images",
-      "matchManagers": ["docker-compose"],
-      "matchDatasources": ["docker"],
-      "versioning": "docker"
-    },
-    {
-      "description": "Ignore major Docker image updates",
-      "matchManagers": ["docker-compose"],
-      "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
-    }
-  ]
+    "managerFilePatterns": [
+      "/(^|\\/)(docker-)?compose\\.ya?ml$/"
+    ]
+  }
 }
