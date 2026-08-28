@@ -5,6 +5,8 @@
     "docker:disableMajor"
   ],
   "dependencyDashboard": true,
+  "dependencyDashboardApproval": false,
+  "prCreation": "immediate",
   "enabledManagers": ["docker-compose"],
   "docker-compose": {
     "managerFilePatterns": [
