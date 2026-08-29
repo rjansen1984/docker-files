@@ -66,7 +66,7 @@ services:
       - docker-network
 
   grimmory-db:
-    image: mariadb:11.8-noble
+    image: mariadb:12.3-noble
     container_name: grimmory-db
     cpu_shares: 256
     restart: unless-stopped
