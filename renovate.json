@@ -16,22 +16,25 @@
   },
   "packageRules": [
     {
+      "description": "Keep MariaDB on the 11.8 Noble release line",
       "matchPackageNames": [
-        "mariadb$"
+        "/(^|\\/)mariadb$/"
       ],
       "allowedVersions": "/^11\\.8(?:\\.[0-9]+)?-noble$/"
     },
     {
-      "matchPackagePatterns": [
-        "calibre-web$"
+      "description": "Exclude Calibre-Web 5.x",
+      "matchPackageNames": [
+        "/(^|\\/)calibre-web$/"
       ],
-      "allowedVersions": "!/^5\\./"
+      "allowedVersions": "!/^5(?:\\.|$)/"
     },
     {
-      "matchPackagePatterns": [
-        "lidarr$"
+      "description": "Exclude Lidarr 8.x",
+      "matchPackageNames": [
+        "/(^|\\/)lidarr$/"
       ],
-      "allowedVersions": "!/^8\\./"
+      "allowedVersions": "!/^8(?:\\.|$)/"
     }
   ]
 }
