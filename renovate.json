@@ -19,8 +19,7 @@
       "matchPackageNames": [
         "mariadb$"
       ],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<compatibility>-noble)$",
-      "allowedVersions": "^11.8.0"
+      "allowedVersions": "/^11\\.8(?:\\.[0-9]+)?-noble$/"
     },
     {
       "matchPackagePatterns": [
