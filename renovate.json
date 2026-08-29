@@ -1,16 +1,41 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "docker:disableMajor"
+    "config:recommended"
   ],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
   "prCreation": "immediate",
-  "enabledManagers": ["docker-compose"],
+  "enabledManagers": [
+    "docker-compose"
+  ],
   "docker-compose": {
     "managerFilePatterns": [
       "/(^|\\/)(docker-)?compose\\.ya?ml$/"
     ]
-  }
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "mariadb"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "calibre-web"
+      ],
+      "ignoreVersions": "/>=5.0.0/"
+    },
+    {
+      "matchPackageNames": [
+        "lidarr"
+      ],
+      "ignoreVersions": "/>=8.0.0/"
+    }
+  ]
 }
