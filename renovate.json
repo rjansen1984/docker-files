@@ -17,7 +17,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "mariadb"
+        "mariadb$"
       ],
       "matchUpdateTypes": [
         "major",
