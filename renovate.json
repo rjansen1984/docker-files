@@ -19,11 +19,7 @@
       "matchPackageNames": [
         "mariadb$"
       ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
-      "enabled": false
+      "allowedVersions": "^11.8.0"
     },
     {
       "matchPackagePatterns": [
