@@ -26,16 +26,16 @@
       "enabled": false
     },
     {
-      "matchPackageNames": [
-        "calibre-web"
+      "matchPackagePatterns": [
+        "calibre-web$"
       ],
-      "ignoreVersions": "/>=5.0.0/"
+      "allowedVersions": "!/^5\\./"
     },
     {
-      "matchPackageNames": [
-        "lidarr"
+      "matchPackagePatterns": [
+        "lidarr$"
       ],
-      "ignoreVersions": "/>=8.0.0/"
+      "allowedVersions": "!/^8\\./"
     }
   ]
 }
