@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     image: nicolargo/glances:4.5.6
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:61208/api/3/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:61208/"]
       interval: 30s
       timeout: 10s
       retries: 3
