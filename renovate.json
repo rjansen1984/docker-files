@@ -4,7 +4,7 @@
     "config:recommended"
   ],
   "schedule": [
-    "0 */6 * * *"
+    "* */6 * * *"
   ],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
