@@ -4,7 +4,7 @@
     "config:recommended"
   ],
   "schedule": [
-    "* */6 * * *"
+    "every 6 hours"
   ],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
@@ -18,7 +18,7 @@
     ]
   },
   "automerge": true,
-  "automergeType": "pr",
+  "platformAutomerge": true,
   "packageRules": [
     {
       "description": "Automatically merge Docker patch and minor updates",
