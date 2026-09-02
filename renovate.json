@@ -3,6 +3,9 @@
   "extends": [
     "config:recommended"
   ],
+  "schedule": [
+    "0 */6 * * *"
+  ],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
   "prCreation": "immediate",
@@ -14,7 +17,20 @@
       "/(^|\\/)(docker-)?compose\\.ya?ml$/"
     ]
   },
+  "automerge": true,
+  "automergeType": "pr",
   "packageRules": [
+    {
+      "description": "Automatically merge Docker patch and minor updates",
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "automerge": true
+    },
     {
       "description": "Keep MariaDB on the 11.8 Noble release line",
       "matchPackageNames": [
