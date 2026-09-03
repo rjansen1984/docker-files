@@ -8,6 +8,7 @@
   ],
   "dependencyDashboard": true,
   "dependencyDashboardApproval": false,
+  "ignoreTests": true,
   "prCreation": "immediate",
   "enabledManagers": [
     "docker-compose"
