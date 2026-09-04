@@ -1,0 +1,24 @@
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:2026.9.0
+    container_name: homeassistant
+    cpu_shares: 768
+    restart: unless-stopped
+    healthcheck:
+      test: curl -f http://localhost:8123/ || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    privileged: true
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - /${APP_VOLUME_DIR}/homeassistant:/config:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    network_mode: host
